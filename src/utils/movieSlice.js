@@ -7,6 +7,7 @@ const movieSlice = createSlice({
         favorites: [],
         watchlist: [],
         movieDetails: {},
+        searchHistory:[],
     },
     reducers:
     {
@@ -33,6 +34,11 @@ const movieSlice = createSlice({
         removeFromWatchlist: (state, action) => {
             state.watchlist = state.watchlist.filter(movie => movie.imdbID !== action.payload.imdbID);
           },
+          addSearchHistory:(state,action) =>
+          {
+            state.searchHistory = [...state.searchHistory,action.payload]
+
+          }
 
     }
 });
@@ -44,6 +50,7 @@ export const{
     addToWatchlist,
     removeFromWatchlist,
     setMovieDetails,
+    addSearchHistory
 } = movieSlice.actions;
 
 export default movieSlice.reducer;
