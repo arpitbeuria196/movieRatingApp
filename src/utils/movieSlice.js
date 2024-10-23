@@ -38,7 +38,11 @@ const movieSlice = createSlice({
           {
             state.searchHistory = [...state.searchHistory,action.payload]
 
+          },
+          removeSearchHistory: (state, action) => {
+            state.searchHistory = state.searchHistory.filter((h) => h !== action.payload);
           }
+          
 
     }
 });
@@ -50,7 +54,7 @@ export const{
     addToWatchlist,
     removeFromWatchlist,
     setMovieDetails,
-    addSearchHistory
+    addSearchHistory,removeSearchHistory
 } = movieSlice.actions;
 
 export default movieSlice.reducer;
