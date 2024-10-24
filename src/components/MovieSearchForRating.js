@@ -7,6 +7,7 @@ import Pagination from './Pagination';  // Import the new Pagination component
 import { IoMdCloseCircle } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
 import { FaCartPlus } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const MovieSearchForRating = () => {
   const [query, setQuery] = useState('');
@@ -17,6 +18,7 @@ const MovieSearchForRating = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [favCount,setFavCount]=useState(0);
   const[watchCount,setWatchCount] = useState(0);
+  const navigate = useNavigate();
  
 
 
@@ -74,6 +76,10 @@ const MovieSearchForRating = () => {
   {
     setWatchCount(count => isAdded ? count+1 : count-1);
   }
+  const moreDetailsNavigationHandle = (movieId)=>
+  {
+    navigate(`/details/${movieId}`);
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -109,7 +115,7 @@ const MovieSearchForRating = () => {
             {searchHistories.map((history, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center cursor-pointer text-blue-500 hover:scale-110 text-blue-700 transition-colors"
+                className="flex justify-between items-center cursor-pointer text-blue-500 hover: text-blue-700 transition-colors"
               >
                 {/* Search history item */}
                 <span onClick={() => searchHandle(history)}>
@@ -133,6 +139,7 @@ const MovieSearchForRating = () => {
            movie={movie}
            updateFavoriteCount={updateFavoriteCount} 
            updateWatchCount = {updateWatchCount}
+           moreDetailsNavigationHandle={moreDetailsNavigationHandle}
 
            />
         ))}

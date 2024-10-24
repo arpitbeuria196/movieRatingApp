@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaPlus, FaMinus, FaEye } from 'react-icons/fa'; // Importing icons from react-icons
 
-const MovieCard = ({ movie, updateFavoriteCount,updateWatchCount }) => {
+const MovieCard = ({ movie, updateFavoriteCount,updateWatchCount,moreDetailsNavigationHandle }) => {
   const [addToFavList, setAddToFavList] = useState(0);
   const [inWatchlist, setInWatchlist] = useState(false); // State to track if the movie is in the watchlist
 
@@ -31,6 +31,7 @@ const MovieCard = ({ movie, updateFavoriteCount,updateWatchCount }) => {
       <img
         className="w-full h-64 object-cover"
         src={movie.Poster !== "N/A" ? movie.Poster : 'https://via.placeholder.com/400'}
+        onClick={() => moreDetailsNavigationHandle(movie.imdbID)}
         alt={movie.Title}
       />
       <div className="px-6 py-4">
