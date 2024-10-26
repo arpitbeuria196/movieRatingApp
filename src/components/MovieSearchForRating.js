@@ -8,6 +8,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { MdFavorite } from "react-icons/md";
 import { FaCartPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { FaSortAlphaDown,FaSortAlphaDownAlt } from "react-icons/fa";
 
 const MovieSearchForRating = () => {
   const [query, setQuery] = useState('');
@@ -18,7 +19,10 @@ const MovieSearchForRating = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [favCount,setFavCount]=useState(0);
   const[watchCount,setWatchCount] = useState(0);
+  const[isSortedAsc,setIsSortedAsc]  = useState(true);
+  const[displayedItems,setDisplayedItems] = useState('movie');
   const navigate = useNavigate();
+
  
 
 
@@ -38,7 +42,32 @@ const MovieSearchForRating = () => {
   const totalPages = Math.ceil(searchSelector.length / ITEMS_PER_PAGE);
   const firstIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const lastIndex = firstIndex + ITEMS_PER_PAGE;
-  const slicedSearch = searchSelector.slice(firstIndex, lastIndex);
+  
+
+  const sortedHistories = [...searchSelector].sort((a,b)=>
+  {
+    const nameA = a.Title.toLowerCase();
+    const nameB = b.Title.toLowerCase();
+
+    if(isSortedAsc)
+      return nameA<nameB ? -1:1;
+    return nameA>nameB ? -1 : 1;
+
+  })
+
+ 
+  const slicedSearch = sortedHistories.slice(firstIndex, lastIndex);
+
+  const movies  = slicedSearch.filter(history=> history.Type == 'movie');
+  const series  = slicedSearch.filter(history=> history.Type == 'series');
+
+  console.log(displayedItems);
+  const itemsToDisplay = () => {
+    if (displayedItems === 'movie') return movies;
+    if (displayedItems === 'series') return series;
+    return slicedSearch;
+  };
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -79,6 +108,10 @@ const MovieSearchForRating = () => {
   const moreDetailsNavigationHandle = (movieId)=>
   {
     navigate(`/details/${movieId}`);
+  }
+  const toggleSortOrder = ()=>
+  {
+    setIsSortedAsc(!isSortedAsc);
   }
 
   return (
@@ -130,10 +163,30 @@ const MovieSearchForRating = () => {
           </ul>
         </div>
       )}
+      <div className="mb-4">
+        <button
+          onClick={toggleSortOrder}
+          className="px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400 transition-colors"
+        >
+          {isSortedAsc ? (<FaSortAlphaDown />) : (<FaSortAlphaDownAlt />)}
+        </button>
+      </div>
+      {/* Option Selection for Movies and Series */}
+      <div className="mb-4">
+        <select
+          value={displayedItems}
+          onChange={(e) => setDisplayedItems(e.target.value)}
+          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+        >
+          <option value="all">All</option>
+          <option value="movie">Movies</option>
+          <option value="series">Series</option>
+        </select>
+      </div>
 
       {/* Movie Results */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
-        {slicedSearch.map((movie) => (
+        {itemsToDisplay().map((movie) => (
           <MovieCard 
           key={movie.imdbID}
            movie={movie}
